@@ -1,0 +1,15 @@
+{
+    "name": "teste-automatizado",
+    "authors": [
+        {
+            "name": "Felipe Bohnert Paetzold",
+            "email": "felipe.paetzold@gmail.com"
+        }
+    ],
+    "require": {
+        "facebook/webdriver": "^1.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.3"
+    }
+}
