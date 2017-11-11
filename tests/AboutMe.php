@@ -99,7 +99,7 @@ class AboutMe
      */
     public function waitTooltip()
     {
-        $wait = new WebDriverWait($this->driver, 8, 1000);
+        $wait = new WebDriverWait($this->driver, 15, 1000);
         $wait->until(
             WebDriverExpectedCondition::invisibilityOfElementLocated(
                 WebDriverBy::cssSelector('.toast.rounded')

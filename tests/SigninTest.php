@@ -39,11 +39,12 @@ class SigninTest extends \PHPUnit\Framework\TestCase
     }
     /**
      * @group ex5
+     * @dataProvider dataProvider
      */
-    public function testAddMoreDataAboutYou()
+    public function testAddMoreDataAboutYou($username, $password)
     {
         // Act
-       $actual = $this->home->login('unicesumar', '123456')
+       $actual = $this->home->login($username, $password)
             ->gotToAboutMe()
             ->deleteLast()
             ->getToastDelete();
@@ -55,6 +56,13 @@ class SigninTest extends \PHPUnit\Framework\TestCase
     public function tearDown()
     {
         $this->driver->quit();
+    }
+
+    public static function dataProvider()
+    {
+        $json = file_get_contents('dataProviders/signInTest.json');
+        $arr = json_decode($json, true);
+        return $arr;
     }
 
 }
