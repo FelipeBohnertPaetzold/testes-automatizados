@@ -7,9 +7,12 @@ use Facebook\WebDriver\Remote\RemoteWebDriver,
     Facebook\WebDriver\WebDriverSelect,
     Facebook\WebDriver\WebDriverWait,
     Facebook\WebDriver\WebDriverExpectedCondition;
+use PHPUnit\Framework\TestCase;
 use Tests\Utils\Window;
 
-class SigninTest extends \PHPUnit\Framework\TestCase
+require "constantes.php";
+
+class SigninTest extends TestCase
 {
 
     /**
@@ -27,12 +30,23 @@ class SigninTest extends \PHPUnit\Framework\TestCase
      */
     private $driver;
 
+    private $sessionId;
+
 
     public function setUp()
     {
-        $this->driver = RemoteWebDriver::create("http://localhost:4444", DesiredCapabilities::chrome());
+        $this->driver = RemoteWebDriver::create(
+            BROWSERSTACK_URL,
+            array("os"=>"Windows",
+                "os_version"=>"7",
+                "browserName"=>"Chrome",
+                "resolution"=>"1280x800"
+            )
+        );
+        $this->sessionId = $this->driver->getSessionID();
         $this->driver->manage()->window()->maximize();
-        $this->driver->manage()->timeouts()->implicitlyWait(5);
+//        $this->driver = RemoteWebDriver::create("http://localhost:4444", DesiredCapabilities::chrome());
+        $this->driver->manage()->timeouts()->implicitlyWait(10);
         $this->driver->get('http://www.juliodelima.com.br/taskit');
 
         $this->home = new home($this->driver);
@@ -55,6 +69,11 @@ class SigninTest extends \PHPUnit\Framework\TestCase
 
     public function tearDown()
     {
+        $name = $this->getName();
+        $status = $this->getStatus();
+        if ($status != 0) {
+            file_get_contents(PUT_URL.$this->sessionId.'.json', false, stream_context_create(array('http'=>array('method'=>'PUT','header'=>'Content-type: application/json', 'content'=>'{"status":"failed","reason":"'.$name.'"}'))));
+        }
         $this->driver->quit();
     }
 
